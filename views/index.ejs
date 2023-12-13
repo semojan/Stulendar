@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("includes/head", {title: "Semojan"}) %>
+    <link rel="stylesheet" href="./styles/form.css">
+    <link rel="stylesheet" href="./styles/blog/home.css">
+</head>
+<body>
+    <%- include("includes/header") %>
+    <main>
+        <section class="col-xl-8 col-m-11">
+            <form action="">
+                <div>
+                    <label for="search">جستجو :</label>
+                    <input type="text" name="search" id="search">
+                </div>
+                <div>
+                    <label for="category">دسته‌بندی :</label>
+                    <select name="category">
+                        <option value="anime">انیمه</option>
+                        <option value="music">آهنگ</option>
+                    </select>
+                </div>
+            </form>
+
+            <ul id="posts" >
+                <li>
+                    <h2>title</h2>
+                    <img src="images/no-profile.jpg" alt="test-image">
+                    <div class="info">
+                        <h3>date</h3>
+                        <h3>category</h3>
+                        <p>
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat esse dolor, 
+                            modi cumque eos accusamus
+                        </p>
+                    </div>
+                    <button class="btn">see</button>
+                </li>
+            </ul>
+        </section>
+    </main>
+    <%- include("includes/footer") %>
+</body>
+</html>
