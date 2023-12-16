@@ -17,13 +17,12 @@ function createStore (){
 //create session config
 function createConfig (){
     return {
-        secret: "",
+        secret: "secret",
         resave: false,
         saveUninitialized: false,
         store: createStore(),
         cookie: {
-            maxAge: 24 * 60 * 60 * 1000,
-            sameSite: "lax"
+            maxAge: 10 * 60 * 1000
         }
     }
 }
