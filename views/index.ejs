@@ -1,45 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <%- include("includes/head", {title: "Semojan"}) %>
-    <link rel="stylesheet" href="./styles/form.css">
-    <link rel="stylesheet" href="./styles/blog/home.css">
-</head>
-<body>
-    <%- include("includes/header") %>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stulendar</title>
+    <link rel="stylesheet" href="styles/index.css" />
+    <!-- Fullcalendar tags -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js" defer></script>
+  </head>
+  <body>
     <main>
-        <section class="col-xl-8 col-m-11">
-            <form action="">
-                <div>
-                    <label for="search">جستجو :</label>
-                    <input type="text" name="search" id="search">
-                </div>
-                <div>
-                    <label for="category">دسته‌بندی :</label>
-                    <select name="category">
-                        <option value="anime">انیمه</option>
-                        <option value="music">آهنگ</option>
-                    </select>
-                </div>
-            </form>
-
-            <ul id="posts" >
-                <li>
-                    <h2>title</h2>
-                    <img src="images/no-profile.jpg" alt="test-image">
-                    <div class="info">
-                        <h3>date</h3>
-                        <h3>category</h3>
-                        <p>
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat esse dolor, 
-                            modi cumque eos accusamus
-                        </p>
-                    </div>
-                    <button class="btn">see</button>
-                </li>
-            </ul>
-        </section>
+      <!-- Navbar section -->
+      <aside>
+        <nav>
+          <h1>Stulendar</h1>
+          <button class="nav-btn" id="dailyBtn">
+            برنامه روزانه
+            <img src="Icons/daily-btn.svg" alt="daily-icon" width="40px" />
+          </button>
+          <button class="nav-btn" id="weeklyBtn">
+            برنامه هفتگی
+            <img src="Icons/weekly-btn.svg" alt="daily-icon" width="40px" />
+          </button>
+          <button class="nav-btn" id="monthlyBtn">
+            برنامه ماهانه
+            <img
+              src="Icons/monthly-btn.svg"
+              alt="daily-icon"
+              width="40px"
+            />
+          </button>
+        </nav>
+        <button class="nav-btn">
+          حساب کاربری
+          <img src="Icons/profile.svg" alt="daily-icon" width="40px" />
+        </button>
+      </aside>
+      <section class="calendar-section" id="calendarSection">
+        <div class="container">
+          <div id="calendar"></div>
+        </div>
+      </section>
     </main>
-    <%- include("includes/footer") %>
-</body>
+    <!-- Scripts -->
+    <script src="scripts/index.js"></script>
+  </body>
 </html>

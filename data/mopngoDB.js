@@ -4,9 +4,10 @@ const client = mongodb.MongoClient;
 
 let database
 
+//using mongo clinet to stablish a connection
 async function connect (){
     const connection = await client.connect("mongodb://127.0.0.1:27017");
-    database = connection.db("stulendar");
+    database = connection.db("stulendar"); //connecting to server
 }
 
 function getDb (){
