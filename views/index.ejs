@@ -5,8 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Stulendar</title>
     <link rel="stylesheet" href="styles/index.css" />
+    <link rel="stylesheet" href="styles/preSets.css" />
     <!-- Fullcalendar tags -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <script src="fullcalendar/core/index.global.js"></script>
+    <script src="fullcalendar/dist/index.global.js"></script>
+    <script src="fullcalendar/core/locales/es.global.js"></script>
+    <!-- rrule lib -->
+    <script src="https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js"></script>
+
+    <!-- fullcalendar bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+    <!-- the rrule-to-fullcalendar connector. must go AFTER the rrule lib -->
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@6.1.10/index.global.min.js"></script>
+    <!-- Persian Date picker -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js"
+    ></script>
   </head>
   <body>
     <main>
@@ -36,13 +57,187 @@
           <img src="Icons/profile.svg" alt="daily-icon" width="40px" />
         </button>
       </aside>
+
+      <!-- Calendar section -->
       <section class="calendar-section" id="calendarSection">
         <div class="container">
           <div id="calendar"></div>
         </div>
+
+        <!-- Add Event buttons -->
+        <div class="addBtn-group">
+          <div>
+            <div class="wrapper">
+              <img src="Icons/add.svg" alt="add icon" width="25xp" />
+            </div>
+            <ul class="btn-list">
+              <li id="addCurriculumBtn">
+                <img
+                  src="Icons/class-event.svg"
+                  alt="class event icon"
+                  width="25xp"
+                />
+                برنامه درسی
+              </li>
+              <li id="addEventBtn">
+                <img src="Icons/event.svg" alt="event icon" width="25xp" />
+                رویداد
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="bg-layer"></div>
       </section>
+
+      <!-- Event/Classs module -->
+      <div class="module-bg display-none" id="moduleBg">
+        <!-- Event Module -->
+        <div class="module display-none" id="eventModule">
+          <h1 class="module-header"></h1>
+          <form action="" id="eventForm">
+            <div class="input-container">
+              <label for="eventTitle">*عنوان رویداد</label>
+              <input type="text" name="title" id="eventTitle" required />
+              <p class="errorMessage"></p>
+            </div>
+            <div class="input-container">
+              <label for="eventDate">*تاریخ رویداد</label>
+              <input
+                type="date"
+                name="start"
+                id="eventDate"
+                required
+                data-jdp
+                data-jdp-only-date
+              />
+              <p class="errorMessage"></p>
+            </div>
+            <div class="input-container">
+              <label for="eventTime">*ساعت رویداد</label>
+              <input type="time" name="eventTime" id="eventTime" required />
+              <p class="errorMessage"></p>
+            </div>
+            <div class="input-container">
+              <label for="eventDescription">توضیحات</label>
+              <textarea
+                rows="3"
+                name="eventDescription"
+                id="eventDescription"
+              ></textarea>
+            </div>
+            <div class="module-btn-group">
+              <input type="submit" value="" />
+              <button class="cancel-btn" id="cancelBtn">انصراف</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Class module -->
+        <div class="module display-none" id="classModule">
+          <h1 class="module-header"></h1>
+          <form action="" id="classForm">
+            <div class="input-container">
+              <label for="classTitle">*عنوان کلاس</label>
+              <input type="text" name="classTitle" id="classTitle" required />
+              <p class="errorMessage"></p>
+            </div>
+            <div class="input-container">
+              <label for="classEndDate">*تاریخ پایان ترم</label>
+              <input
+                type="date"
+                name="classEndDate"
+                id="classEndDate"
+                required
+              />
+              <p class="errorMessage"></p>
+            </div>
+            <div id="timeScheduleBox">
+              <div class="timeScheduleBox">
+                <p>برنامه زمانی</p>
+                <button class="addScheduleBTN" id="addSchedule">
+                  افزودن
+                  <img
+                    src="Icons/circularAdd.svg"
+                    alt="add icon"
+                    width="20px"
+                  />
+                </button>
+              </div>
+            </div>
+            <template id="inputGroup">
+              <form class="inputGroup" id="IG">
+                <div class="input-container">
+                  <label for="repeatInput">تکرار</label>
+                  <select name="repeatInput" id="repeatInput">
+                    <option value="everyWeek">هر هفته</option>
+                    <option value="evenWeeks">یک هفته درمیان</option>
+                  </select>
+                </div>
+                <div class="input-container">
+                  <label for="classTime">*ساعت کلاس</label>
+                  <input type="time" name="classTime" id="classTime" required />
+                  <p class="errorMessage"></p>
+                </div>
+                <div class="input-container">
+                  <label for="classSDate">*تاریخ شروع کلاس</label>
+                  <input
+                    type="date"
+                    name="classSDate"
+                    id="classSDate"
+                    required
+                  />
+                  <p class="errorMessage"></p>
+                </div>
+              </form>
+            </template>
+
+            <div class="input-container">
+              <label for="exDate">*تاریخ امتحان</label>
+              <input type="date" name="exDate" id="exDate" required />
+              <p class="errorMessage"></p>
+            </div>
+            <div class="input-container">
+              <label for="exTime">*ساعت امتحان</label>
+              <input type="time" name="exTime" id="exTime" required />
+              <p class="errorMessage"></p>
+            </div>
+
+            <div class="module-btn-group">
+              <input type="submit" value="ثبت کلاس" id="" />
+              <button class="cancel-btn" id="cancelBtn">انصراف</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Event information view module -->
+        <template id="EinfoModule">
+          <div class="EinfoModule">
+            <div class="btnGroup">
+              <button id="closeEinfoModule">
+                <img src="Icons/close.svg" alt="close icon" />
+              </button>
+              <button id="deleteEvent">
+                <img src="Icons/delete.svg" alt="close icon" />
+              </button>
+              <button id="editEvent">
+                <img src="Icons/edit.svg" alt="close icon" />
+              </button>
+            </div>
+            <div class="eventTitle">
+              <h1></h1>
+              <div id="eventColor"></div>
+            </div>
+            <p class="eventDateTime"></p>
+          </div>
+        </template>
+      </div>
     </main>
+
     <!-- Scripts -->
-    <script src="scripts/index.js"></script>
+    <script>
+      jalaliDatepicker.startWatch();
+    </script>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/controller.js"></script>
   </body>
 </html>
