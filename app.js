@@ -6,6 +6,7 @@ const eSession = require("express-session")
 const db = require("./data/mongoDB");
 const authController = require("./controller/auth.controller");
 const appController = require("./controller/app.controller");
+const eventController = require("./controller/course.event.controller");
 const sessionConfig = require("./config/session");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(eSession(session));
 // path controllers
 app.use(authController);
 app.use(appController);
+app.use(eventController);
 
 
 // error handlers
