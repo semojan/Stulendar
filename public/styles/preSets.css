@@ -1,0 +1,56 @@
+:root {
+  --main-bg: #5b5077;
+  --elements-bg: #4b4262;
+  --font-clr: #ffffff;
+  --clicked-btn: 255, 255, 255;
+  --btn-clr: #c889ef;
+  --light-blue: 67, 188, 234;
+  --input-clr: 181, 177, 177;
+  --danger-clr: 255, 103, 103;
+
+  --fs-20: 1.25em;
+}
+
+@font-face {
+  font-family: "IranSans";
+  src: url("Font/IRANSans.ttf");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "IranSans";
+  src: url("Font/IRANSans_Medium.ttf");
+  font-weight: medium;
+}
+
+@font-face {
+  font-family: "IranSans";
+  src: url("Font/IRANSans_Bold.ttf");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "IranSans";
+  src: url("Font/IRANSans_Light.ttf");
+  font-weight: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+html,
+body {
+  width: 100%;
+  max-height: 100vh;
+  background-color: var(--main-bg);
+  font-family: "IranSans";
+}
