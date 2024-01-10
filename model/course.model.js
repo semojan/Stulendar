@@ -10,7 +10,7 @@ class Course{
     }
 
     async saveCourse(){
-        courseData = {
+        const courseData = {
             groupId: this.groupId,
             title: this.title,
             color: this.color,

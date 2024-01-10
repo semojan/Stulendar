@@ -20,6 +20,8 @@ const session = sessionConfig();
 
 app.use(eSession(session));
 
+app.use(express.json());
+
 // path controllers
 app.use(authController);
 app.use(appController);

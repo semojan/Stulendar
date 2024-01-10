@@ -11,7 +11,7 @@ class Event{
     }
 
     async saveEvent(){
-        eventData = {
+        const eventData = {
             groupId: this.groupId,
             color: this.color,
             title: this.title,
