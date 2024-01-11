@@ -1,7 +1,10 @@
 const db = require("../data/mongoDB");
 
+const mongodb = require("mongodb")
+
 class Event{
-    constructor (groupId, color, title, start, description, eventId){
+    constructor (userId, groupId, color, title, start, description, eventId){
+        this.userId = userId;
         this.groupId = groupId;
         this.color = color;
         this.title = title;
@@ -12,6 +15,7 @@ class Event{
 
     async saveEvent(){
         const eventData = {
+            userId: this.userId,
             groupId: this.groupId,
             color: this.color,
             title: this.title,
@@ -32,12 +36,12 @@ class Event{
         }
     } 
 
-    static async getEvents(){
-        return await db.getDb().collection("events").find().toArray();
+    static async getEvents(uid){
+        return await db.getDb().collection("events").find({userId: uid}).toArray();
     }
 
-    async removeEvent(){
-        const eventId = new mongodb.ObjectId(this.id);
+    static async removeEvent(id){
+        const eventId = new mongodb.ObjectId(id);
         await db.getDb().collection("events").deleteOne({_id: eventId});
     }
 }

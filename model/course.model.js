@@ -1,7 +1,8 @@
 const db = require("../data/mongoDB");
 
 class Course{
-    constructor (groupId, title, color, rrule, courseId){
+    constructor (userId, groupId, title, color, rrule, courseId){
+        this.userId = userId;
         this.groupId = groupId;
         this.title = title;
         this.color = color;
@@ -11,6 +12,7 @@ class Course{
 
     async saveCourse(){
         const courseData = {
+            userId: this.userId,
             groupId: this.groupId,
             title: this.title,
             color: this.color,
@@ -31,7 +33,7 @@ class Course{
     } 
 
     static async getCourses(){
-        return await db.getDb().collection("courses").find().toArray();
+        return await db.getDb().collection("courses").find({userId: this.userId}).toArray();
     }
 
     async removeCourse(){
