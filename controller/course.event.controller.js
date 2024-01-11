@@ -5,7 +5,7 @@ const Course = require("../model/course.model");
 const router = express.Router();
 
 router.get("/events", async function (req , res){
-    events = await Event.getEvents("1");
+    const events = await Event.getEvents("1");
 
     res.json(events);
 });
@@ -70,10 +70,68 @@ router.delete("/events", async function(req, res, next){
     }
 });
 
-router.get("/courses", async function (req, res){
-    courses = await Course.getCourses();
+router.get("/courses", async function (req , res){
+    const courses = await Course.getCourses("1");
 
     res.json(courses);
+});
+
+router.post("/courses", async function(req, res, next){
+
+    const courseData = req.body;
+    try { 
+        const course = new Course(
+            "1",
+            courseData.groupId,
+            courseData.title,
+            courseData.color,
+            courseData.rrule
+        );
+        await course.saveCourse();
+
+        res.status(201).json({
+            message: "course was successfully added"
+        });
+    } catch (error){
+        next(error);
+        return;
+    }
+});
+
+router.patch("/courses", async function(req, res, next){
+    const courseData = req.body;
+    try {
+        const course = new Course(
+            "1",
+            courseData.groupId,
+            courseData.title,
+            courseData.color,
+            courseData.rrule,
+            courseData.id
+        );
+        await course.saveCourse();
+
+        res.status(201).json({
+            message: "course was successfully updated"
+        });
+    } catch (error){
+        next(error);
+        return;
+    }
+});
+
+router.delete("/courses", async function(req, res, next){
+    const courseId = req.body.id;
+    try {
+        await Course.removeCourse(courseId);
+
+        res.status(201).json({
+            message: "course was successfully deleted"
+        });
+    } catch (error){
+        next(error);
+        return;
+    }
 });
 
 module.exports = router;

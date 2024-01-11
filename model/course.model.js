@@ -1,5 +1,7 @@
 const db = require("../data/mongoDB");
 
+const mongodb = require("mongodb")
+
 class Course{
     constructor (userId, groupId, title, color, rrule, courseId){
         this.userId = userId;
@@ -32,12 +34,12 @@ class Course{
         }
     } 
 
-    static async getCourses(){
-        return await db.getDb().collection("courses").find({userId: this.userId}).toArray();
+    static async getCourses(uid){
+        return await db.getDb().collection("courses").find({userId: uid}).toArray();
     }
 
-    async removeCourse(){
-        const evcourseIdentId = new mongodb.ObjectId(this.id);
+    static async removeCourse(id){
+        const courseId = new mongodb.ObjectId(id);
         await db.getDb().collection("courses").deleteOne({_id: courseId});
     }
 }
