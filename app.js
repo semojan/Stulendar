@@ -12,6 +12,7 @@ const sessionConfig = require("./config/session");
 const app = express();
 
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: false }));
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -21,6 +22,18 @@ const session = sessionConfig();
 app.use(eSession(session));
 
 app.use(express.json());
+
+app.use(function(req, res, next){
+    const uid = req.session.uid;
+
+    if(!uid){
+        return next();
+    }
+
+    res.locals.uid = uid;
+    res.locals.isAuth = true;
+    next();
+});
 
 // path controllers
 app.use(authController);

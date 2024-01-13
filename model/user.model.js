@@ -8,7 +8,7 @@ class User{
         this.email = email;
     }
 
-    async signUp(){
+    async addUser(){
         const hashedPass = await bcrypt.hash(this.password, 12);
 
         await db.getDb().collection("users").insertOne({
