@@ -3,7 +3,7 @@ let events = [
       groupId: 1,
       id: 1,
       title: "my recurring event",
-      color: "#919",
+      color: "#a275c5",
       rrule: {
         freq: "weekly",
         interval: 1,
@@ -16,8 +16,8 @@ let events = [
     {
       groupId: 1,
       id: 2,
-      title: "my recurring event22",
-      color: "#910",
+      title: "my recurring event",
+      color: "#a275c5",
       rrule: {
         freq: "weekly",
         interval: 2,
@@ -30,7 +30,7 @@ let events = [
     {
       groupId: 1,
       id: 3,
-      color: "#910",
+      color: "#a275c5",
       title: "Ex of my recurring event",
       start: "2024-02-29T08:00:00",
       description: "nothing special",
@@ -75,22 +75,23 @@ function initCalendar() {
       moduleBg.classList.remove("display-none");
 
       closeInfoModule();
-      deleteEventBtn(info.event.id);
+      deleteEventBtn(info.event);
 
       //edit button
       let editBtn = document.getElementById("editEvent");
-      editBtn.addEventListener("click", () => {
-        // remove info box from html
-        document
-          .getElementById("moduleBg")
-          .removeChild(document.querySelector(".EinfoModule"));
-        if (info.event.groupId === "") updateEventForm(info.event);
-        else {
+      editBtn.addEventListener("click", async () => {
+        removeInfoModule();
+
+        if (info.event.groupId === "") {
+          updateEventForm(info.event);
+        } else {
           let clickedEvent = Object.values(events).filter(
             (event) => `${event.groupId}` === info.event.groupId
           );
           let exEvent = clickedEvent.pop();
-          updateClassForm(clickedEvent, exEvent);
+          Promise.resolve(updateClassForm(clickedEvent, exEvent)).then(() =>
+            AddUpdatedEvent()
+          );
         }
       });
     },
@@ -128,12 +129,25 @@ eventForm.addEventListener("submit", (e) => {
 
 function eventSubmit(form) {
   let event = Object.fromEntries(new FormData(form));
-  event.start = event.start + "T" + event.eventTime + ":00";
+  let dateArray = event.start.split("/");
+  let date = jalaali.toGregorian(
+    parseInt(dateArray[0]),
+    parseInt(dateArray[1]),
+    parseInt(dateArray[2])
+  );
+  date =
+    `${date.gy}-${String(date.gm).padStart(2, "0")}-${String(date.gd).padStart(
+      2,
+      "0"
+    )}` +
+    "T" +
+    event.eventTime;
   closeModule();
   addEvent({
     id: calendar.getEvents().length,
     title: event.title,
-    start: event.start,
+    start: date,
+    color: event.eventColor,
   });
   form.reset();
 }
@@ -146,7 +160,18 @@ classForm.addEventListener("submit", (e) => {
 
 function classFormSubmit(form) {
   let classEvent = Object.fromEntries(new FormData(form));
-  classEvent.exDate = classEvent.exDate + "T" + classEvent.exTime + ":00";
+  let dateArray = classEvent.exDate.split("/");
+  let exDate = jalaali.toGregorian(
+    parseInt(dateArray[0]),
+    parseInt(dateArray[1]),
+    parseInt(dateArray[2])
+  );
+  exDate =
+    `${exDate.gy}-${String(exDate.gm).padStart(2, "0")}-${String(
+      exDate.gd
+    ).padStart(2, "0")}` +
+    "T" +
+    classEvent.exTime;
 
   let scheduleForm = document.querySelectorAll("#timeScheduleBox #IG");
   let groupId = calendar.getEvents().length;
@@ -154,32 +179,42 @@ function classFormSubmit(form) {
   Object.values(scheduleForm).forEach((Sform) => {
     let inputGroup = Object.fromEntries(new FormData(Sform));
     let weekday = new Date(inputGroup.classSDate);
-    inputGroup.classSDate =
-      inputGroup.classSDate + "T" + inputGroup.classTime + ":00";
+    dateArray = inputGroup.classSDate.split("/");
+    let startDate = jalaali.toGregorian(
+      parseInt(dateArray[0]),
+      parseInt(dateArray[1]),
+      parseInt(dateArray[2])
+    );
+    startDate =
+      `${startDate.gy}-${String(startDate.gm).padStart(2, "0")}-${String(
+        startDate.gd
+      ).padStart(2, "0")}` +
+      "T" +
+      inputGroup.classTime;
 
-    let result = {
-      groupId: groupId,
-      id: id++,
-      title: classEvent.classTitle,
-      rrule: {
-        freq: "weekly",
-        interval: inputGroup.repeatInput == "everyWeek" ? 1 : 2,
-        byweekday: [weekday.toString().slice(0, 2)],
-        dtstart: inputGroup.classSDate,
-        until: classEvent.classEndDate,
-      },
-    };
-    console.log(result);
+    let dateArray2 = classEvent.classEndDate.split("/");
+    let endDate = jalaali.toGregorian(
+      parseInt(dateArray2[0]),
+      parseInt(dateArray2[1]),
+      parseInt(dateArray2[2])
+    );
+
+    endDate = `${startDate.gy}-${String(startDate.gm).padStart(
+      2,
+      "0"
+    )}-${String(startDate.gd).padStart(2, "0")}`;
+
     addEvent({
       groupId: groupId,
       id: id++,
+      color: classEvent.eventColor,
       title: classEvent.classTitle,
       rrule: {
         freq: "weekly",
         interval: inputGroup.repeatInput == "everyWeek" ? 1 : 2,
         byweekday: [weekday.toString().slice(0, 2)],
-        dtstart: inputGroup.classSDate,
-        until: classEvent.classEndDate,
+        dtstart: startDate,
+        until: endDate,
       },
     });
   });
@@ -187,11 +222,22 @@ function classFormSubmit(form) {
   addEvent({
     groupId: groupId,
     id: id++,
+    color: classEvent.eventColor,
     title: `امتحان ${classEvent.classTitle}`,
-    start: classEvent.exDate,
+    start: exDate,
   });
   closeModule();
+  removeInputGroup();
   form.reset();
+}
+
+/*** remove input group from class form ***/
+function removeInputGroup() {
+  let inputGroups = document.querySelectorAll("#IG");
+  let parent = document.getElementById("timeScheduleBox");
+  Object.values(inputGroups).forEach((child) => {
+    parent.removeChild(child);
+  });
 }
 
 /*** Add event to calendar ***/
@@ -202,18 +248,29 @@ function addEvent(event) {
 /*** Event information view module functions ***/
 function closeInfoModule() {
   let closeInfoModule = document.getElementById("closeEinfoModule");
-  closeInfoModule.addEventListener("click", () => {
-    let moduleBg = document.getElementById("moduleBg");
-    moduleBg.classList.add("display-none");
-    let infoBox = document.querySelector(".EinfoModule");
-    moduleBg.removeChild(infoBox);
-  });
+  closeInfoModule.addEventListener("click", () => removeInfoModule());
 }
 
-function deleteEventBtn(eventId) {
+function removeInfoModule() {
+  let moduleBg = document.getElementById("moduleBg");
+  moduleBg.classList.add("display-none");
+  let infoBox = document.querySelector(".EinfoModule");
+  moduleBg.removeChild(infoBox);
+}
+
+function deleteEventBtn(event) {
   let deleteBtn = document.getElementById("deleteEvent");
   deleteBtn.addEventListener("click", () => {
-    deleteEvent(eventId);
+    if (event.groupId === "") deleteEvent(event.id);
+    else {
+      let clickedEvent = Object.values(events).filter(
+        (cEvent) => `${cEvent.groupId}` === event.groupId
+      );
+      clickedEvent.forEach((e) => {
+        deleteEvent(e.id);
+      });
+    }
+    removeInfoModule();
   });
 }
 
@@ -222,19 +279,22 @@ function deleteEvent(id) {
   document.getElementById("moduleBg").classList.add("display-none");
 }
 
-function updateEventForm({ id, title, start, description }) {
+function updateEventForm({ id, title, start, backgroundColor, description }) {
   // display event form box
+  document.getElementById("moduleBg").classList.remove("display-none");
   document.getElementById("eventModule").classList.remove("display-none");
 
   // fetch data into form
   let time = start.toLocaleTimeString().slice(0, 7);
-  let dateArray = start.toLocaleDateString().split("/");
+  let dateArray = start.toLocaleDateString("fa-IR").split("/");
   document.querySelector("#eventModule h1").innerHTML = "تغییر رویداد";
   document.querySelector("#eventForm #eventTitle").value = title;
   document.querySelector("#eventForm #eventDate").value = `${
-    dateArray[2]
-  }-${dateArray[0].padStart(2, "0")}-${dateArray[1].padStart(2, "0")}`;
+    dateArray[0]
+  }/${dateArray[1].padStart(2, "۰")}/${dateArray[2].padStart(2, "۰")}`;
   document.querySelector("#eventForm #eventTime").value = `0${time}`;
+
+  document.querySelector("#eventForm #eventColor").value = backgroundColor;
 
   if (description !== undefined)
     document.querySelector("#eventForm #eventDescription").value = description;
@@ -245,46 +305,72 @@ function updateEventForm({ id, title, start, description }) {
   eventForm.addEventListener("submit", (e) => {
     e.preventDefault();
     deleteEvent(id);
-    eventSubmit(eventForm);
   });
 }
 
-async function updateClassForm(events, exam) {
-  // store each event id
-  let eventIds = [exam.id];
-
+// store each event id
+let eventIds;
+function updateClassForm(events, exam) {
+  eventIds = [];
+  eventIds.push(exam.id);
   // display event form box
+  document.getElementById("moduleBg").classList.remove("display-none");
   document.getElementById("classModule").classList.remove("display-none");
 
+  document.querySelector("#classModule h1").innerHTML = "تغییر کلاس درس";
   // fetch data into form
-  await events.forEach((event) => {
+  events.forEach((event) => {
     eventIds.push(event.id);
     let IGclone = addScheduleBox();
     let classTime = event.rrule.dtstart.split("T")[1];
-    let classDate = event.rrule.dtstart.split("T")[0];
-    let exTime = exam.start.split("T")[1];
-    let exDate = exam.start.split("T")[0];
-    document.querySelector("#classModule h1").innerHTML = "تغییر کلاس درس";
+    let classDate = event.rrule.dtstart.split("T")[0].split("-");
+    classDate = jalaali.toJalaali(
+      parseInt(classDate[0]),
+      parseInt(classDate[1]),
+      parseInt(classDate[2])
+    );
     document.querySelector("#classTitle").value = event.title;
-    IGclone.querySelector("#classSDate").value = classDate;
+    IGclone.querySelector("#classSDate").value = `${classDate.jy}/${String(
+      classDate.jm
+    ).padStart(2, "۰")}/${String(classDate.jd).padStart(2, "۰")}`;
     IGclone.querySelector("#classTime").value = classTime;
     IGclone.querySelector("#repeatInput").value =
       event.rrule.interval === 1 ? "everyWeek" : "evenWeeks";
 
-    document.querySelector("#classEndDate").value = event.rrule.until;
-    document.querySelector("#exDate").value = exDate;
-    document.querySelector("#exTime").value = exTime;
+    let endDate = event.rrule.until.split("-");
+    endDate = jalaali.toJalaali(
+      parseInt(endDate[0]),
+      parseInt(endDate[1]),
+      parseInt(endDate[2])
+    );
+
+    document.querySelector("#classEndDate").value = `${endDate.jy}/${String(
+      endDate.jm
+    ).padStart(2, "۰")}/${String(endDate.jd).padStart(2, "۰")}`;
   });
+
+  let exTime = exam.start.split("T")[1];
+  let exDate = exam.start.split("T")[0].split("-");
+  exDate = jalaali.toJalaali(
+    parseInt(exDate[0]),
+    parseInt(exDate[1]),
+    parseInt(exDate[2])
+  );
+  document.querySelector("#exDate").value = `${exDate.jy}/${String(
+    exDate.jm
+  ).padStart(2, "۰")}/${String(exDate.jd).padStart(2, "۰")}`;
+  document.querySelector("#exTime").value = exTime;
+  document.querySelector("#classForm #eventColor").value = exam.color;
   document.querySelector('#classForm input[type="submit"]').value =
     "ثبت تغییرات";
+}
 
-  let form = document.getElementById("classForm");
-  console.log(Object.fromEntries(new FormData(form)));
-  form.addEventListener("submit", (e) => {
+function AddUpdatedEvent() {
+  classForm.addEventListener("submit", (e) => {
     e.preventDefault();
     eventIds.forEach((id) => {
       deleteEvent(id);
     });
-    classFormSubmit(form);
+    removeInputGroup();
   });
 }

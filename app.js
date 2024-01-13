@@ -30,17 +30,17 @@ app.use(eventController);
 
 // error handlers
 app.use(function(req, res){
-    res.status(404).render("");
+    res.status(404).render("error404");
 });
 
 app.use(function(error, req, res, next){
     console.log(error);
 
     if(error.code === 404){
-        return res.status(404).render("");
+        return res.status(404).render("error404");
     }
 
-    res.status(500).render("");
+    res.status(500).render("error500");
 });
 
 //makes sure to connect to db before running the app on port 3500

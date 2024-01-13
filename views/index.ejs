@@ -6,6 +6,7 @@
     <title>Stulendar</title>
     <link rel="stylesheet" href="styles/index.css" />
     <link rel="stylesheet" href="styles/preSets.css" />
+    <link rel="stylesheet" href="styles/responsive.css" />
     <!-- Fullcalendar tags -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="fullcalendar/core/index.global.js"></script>
@@ -28,12 +29,34 @@
       type="text/javascript"
       src="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js@1.2.6/dist/jalaali.min.js"></script>
   </head>
   <body>
+    <!-- horizontal Navbar -->
+    <nav id="horizontal">
+      <div class="navBtnGroup">
+        <button class="nav-btn" id="dailyBtn">
+          برنامه روزانه
+          <img src="Icons/daily-btn.svg" alt="daily-icon" width="40px" />
+        </button>
+        <button class="nav-btn" id="weeklyBtn">
+          برنامه هفتگی
+          <img src="Icons/weekly-btn.svg" alt="daily-icon" width="40px" />
+        </button>
+        <button class="nav-btn" id="monthlyBtn">
+          برنامه ماهانه
+          <img src="Icons/monthly-btn.svg" alt="daily-icon" width="40px" />
+        </button>
+      </div>
+      <button class="nav-btn" id="userAccountBtn">
+        حساب کاربری
+        <img src="Icons/profile.svg" alt="daily-icon" width="40px" />
+      </button>
+    </nav>
     <main>
-      <!-- Navbar section -->
+      <!-- vertical Navbar section -->
       <aside>
-        <nav>
+        <nav id="vertical">
           <h1>Stulendar</h1>
           <button class="nav-btn" id="dailyBtn">
             برنامه روزانه
@@ -103,9 +126,10 @@
             <div class="input-container">
               <label for="eventDate">*تاریخ رویداد</label>
               <input
-                type="date"
+                type="text"
                 name="start"
                 id="eventDate"
+                placeholder="yyyy/mm/dd"
                 required
                 data-jdp
                 data-jdp-only-date
@@ -116,6 +140,15 @@
               <label for="eventTime">*ساعت رویداد</label>
               <input type="time" name="eventTime" id="eventTime" required />
               <p class="errorMessage"></p>
+            </div>
+            <div class="input-container" style="align-items: end">
+              <label for="eventColor">انتخاب رنگ رویداد</label>
+              <input
+                type="color"
+                name="eventColor"
+                id="eventColor"
+                value="#A275c5"
+              />
             </div>
             <div class="input-container">
               <label for="eventDescription">توضیحات</label>
@@ -136,72 +169,101 @@
         <div class="module display-none" id="classModule">
           <h1 class="module-header"></h1>
           <form action="" id="classForm">
-            <div class="input-container">
-              <label for="classTitle">*عنوان کلاس</label>
-              <input type="text" name="classTitle" id="classTitle" required />
-              <p class="errorMessage"></p>
-            </div>
-            <div class="input-container">
-              <label for="classEndDate">*تاریخ پایان ترم</label>
-              <input
-                type="date"
-                name="classEndDate"
-                id="classEndDate"
-                required
-              />
-              <p class="errorMessage"></p>
-            </div>
-            <div id="timeScheduleBox">
-              <div class="timeScheduleBox">
-                <p>برنامه زمانی</p>
-                <button class="addScheduleBTN" id="addSchedule">
-                  افزودن
-                  <img
-                    src="Icons/circularAdd.svg"
-                    alt="add icon"
-                    width="20px"
-                  />
-                </button>
+            <div class="formInputsContainer">
+              <div class="input-container">
+                <label for="classTitle">*عنوان کلاس</label>
+                <input type="text" name="classTitle" id="classTitle" required />
+                <p class="errorMessage"></p>
+              </div>
+              <div class="input-container">
+                <label for="classEndDate">*تاریخ پایان ترم</label>
+                <input
+                  type="text"
+                  name="classEndDate"
+                  id="classEndDate"
+                  placeholder="yyyy/mm/dd"
+                  required
+                  data-jdp
+                  data-jdp-only-date
+                />
+                <p class="errorMessage"></p>
+              </div>
+              <div id="timeScheduleBox">
+                <div class="timeScheduleBox">
+                  <p>برنامه زمانی</p>
+                  <button class="addScheduleBTN" id="addSchedule">
+                    افزودن
+                    <img
+                      src="Icons/circularAdd.svg"
+                      alt="add icon"
+                      width="20px"
+                    />
+                  </button>
+                </div>
+              </div>
+              <template id="inputGroup">
+                <form class="inputGroup" id="IG">
+                  <div class="input-container">
+                    <label for="repeatInput">تکرار</label>
+                    <select name="repeatInput" id="repeatInput">
+                      <option value="everyWeek">هر هفته</option>
+                      <option value="evenWeeks">یک هفته درمیان</option>
+                    </select>
+                  </div>
+                  <div class="input-container">
+                    <label for="classTime">*ساعت کلاس</label>
+                    <input
+                      type="time"
+                      name="classTime"
+                      id="classTime"
+                      required
+                    />
+                    <p class="errorMessage"></p>
+                  </div>
+                  <div class="input-container">
+                    <label for="classSDate">*تاریخ شروع کلاس</label>
+                    <input
+                      type="text"
+                      name="classSDate"
+                      id="classSDate"
+                      placeholder="yyyy/mm/dd"
+                      required
+                      data-jdp
+                      data-jdp-only-date
+                    />
+                    <p class="errorMessage"></p>
+                  </div>
+                </form>
+              </template>
+
+              <div class="input-container">
+                <label for="exDate">*تاریخ امتحان</label>
+                <input
+                  type="text"
+                  name="exDate"
+                  id="exDate"
+                  placeholder="yyyy/mm/dd"
+                  required
+                  data-jdp
+                  data-jdp-only-date
+                />
+                <p class="errorMessage"></p>
+              </div>
+              <div class="input-container">
+                <label for="exTime">*ساعت امتحان</label>
+                <input type="time" name="exTime" id="exTime" required />
+                <p class="errorMessage"></p>
+              </div>
+              <div class="input-container" style="align-items: end">
+                <label for="eventColor">انتخاب رنگ رویداد</label>
+                <input
+                  type="color"
+                  name="eventColor"
+                  id="eventColor"
+                  value="#A275c5"
+                />
               </div>
             </div>
-            <template id="inputGroup">
-              <form class="inputGroup" id="IG">
-                <div class="input-container">
-                  <label for="repeatInput">تکرار</label>
-                  <select name="repeatInput" id="repeatInput">
-                    <option value="everyWeek">هر هفته</option>
-                    <option value="evenWeeks">یک هفته درمیان</option>
-                  </select>
-                </div>
-                <div class="input-container">
-                  <label for="classTime">*ساعت کلاس</label>
-                  <input type="time" name="classTime" id="classTime" required />
-                  <p class="errorMessage"></p>
-                </div>
-                <div class="input-container">
-                  <label for="classSDate">*تاریخ شروع کلاس</label>
-                  <input
-                    type="date"
-                    name="classSDate"
-                    id="classSDate"
-                    required
-                  />
-                  <p class="errorMessage"></p>
-                </div>
-              </form>
-            </template>
-
-            <div class="input-container">
-              <label for="exDate">*تاریخ امتحان</label>
-              <input type="date" name="exDate" id="exDate" required />
-              <p class="errorMessage"></p>
-            </div>
-            <div class="input-container">
-              <label for="exTime">*ساعت امتحان</label>
-              <input type="time" name="exTime" id="exTime" required />
-              <p class="errorMessage"></p>
-            </div>
-
             <div class="module-btn-group">
               <input type="submit" value="ثبت کلاس" id="" />
               <button class="cancel-btn" id="cancelBtn">انصراف</button>
@@ -234,9 +296,6 @@
     </main>
 
     <!-- Scripts -->
-    <script>
-      jalaliDatepicker.startWatch();
-    </script>
     <script src="scripts/script.js"></script>
     <script src="scripts/controller.js"></script>
   </body>

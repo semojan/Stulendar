@@ -1,6 +1,7 @@
 :root {
-  --main-bg: #5b5077;
-  --elements-bg: #4b4262;
+  --main-bg1: #4b3764;
+  --main-bg2: #3f3864;
+  --elements-bg: #363055;
   --font-clr: #ffffff;
   --clicked-btn: 255, 255, 255;
   --btn-clr: #c889ef;
@@ -9,29 +10,31 @@
   --danger-clr: 255, 103, 103;
 
   --fs-20: 1.25em;
+  --fs-18: 1.125em;
+  --fs-12: 0.75em;
 }
 
 @font-face {
   font-family: "IranSans";
-  src: url("Font/IRANSans.ttf");
+  src: url("../Font/IRANSans.ttf");
   font-weight: normal;
 }
 
 @font-face {
   font-family: "IranSans";
-  src: url("Font/IRANSans_Medium.ttf");
+  src: url("../Font/IRANSans_Medium.ttf");
   font-weight: medium;
 }
 
 @font-face {
   font-family: "IranSans";
-  src: url("Font/IRANSans_Bold.ttf");
+  src: url("../Font/IRANSans_Bold.ttf");
   font-weight: bold;
 }
 
 @font-face {
   font-family: "IranSans";
-  src: url("Font/IRANSans_Light.ttf");
+  src: url("../Font/IRANSans_Light.ttf");
   font-weight: light;
 }
 
@@ -51,6 +54,6 @@ html,
 body {
   width: 100%;
   max-height: 100vh;
-  background-color: var(--main-bg);
+  background: linear-gradient(68deg, var(--main-bg1), var(--main-bg2));
   font-family: "IranSans";
 }

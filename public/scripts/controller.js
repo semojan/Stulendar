@@ -1,3 +1,4 @@
+jalaliDatepicker.startWatch();
 /*** navbar buttons functioning***/
 let dailyBtn = document.getElementById("dailyBtn");
 let weeklyBtn = document.getElementById("weeklyBtn");
@@ -34,6 +35,8 @@ function wrapperToggle() {
 /*** add curriculum button function ***/
 const addCurriculum = document.getElementById("addCurriculumBtn");
 addCurriculum.addEventListener("click", () => {
+  document.querySelector("#classModule h1").innerHTML = "ایجاد برنامه درسی";
+  document.querySelector('#classForm input[type="submit"]').value = "ثبت";
   document.getElementById("moduleBg").classList.remove("display-none");
   document.getElementById("classModule").classList.remove("display-none");
 });

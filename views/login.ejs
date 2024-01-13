@@ -5,30 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stulendar | Login</title>
     <link rel="stylesheet" href="styles/preSets.css" />
-    <link rel="stylesheet" href="styles/login.css" />
+    <link rel="stylesheet" href="styles/loginSignup.css" />
   </head>
   <body>
     <h1>خوش آمدید Stulendar به</h1>
 
     <form action="">
-      <input
-        type="text"
-        name="username"
-        id="username"
-        placeholder="نام کاربری"
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        id="password"
-        placeholder="رمز ورود"
-        required
-      />
-      <input type="email" name="email" id="email" placeholder="آدرس ایمیل" />
+      <div class="input-container">
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="*نام کاربری"
+          required
+        />
+        <p class="errorMessage"></p>
+      </div>
+      <div class="input-container">
+        <div class="passContainer">
+          <img src="Icons/hide.svg" alt="hide/show icon" id="passIcon" />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="*رمز ورود"
+            required
+          />
+        </div>
+        <p class="errorMessage"></p>
+      </div>
       <input type="submit" value="ورود به برنامه" />
+      <div class="linkContainer">
+        <p>حساب کاربری ندارید؟</p>
+        <a href="signup.html">ثبت نام</a>
+      </div>
     </form>
 
-    <img src="Icons/IconGroup.svg" alt="background" width="497vw" />
+    <img
+      src="Icons/IconGroup.svg"
+      alt="background"
+      class="backgroundImg"
+      width="497vw"
+    />
+
+    <!-- Scripts -->
+    <script>
+      /*** Toggle hide/show icon in password input ***/
+      let passIcon = document.getElementById("passIcon");
+      let passInput = document.getElementById("password");
+      passIcon.addEventListener("click", () => {
+        if (passInput.type == "password") {
+          passInput.type = "text";
+          passIcon.setAttribute("src", "Icons/show.svg");
+        } else {
+          passInput.type = "password";
+          passIcon.setAttribute("src", "Icons/hide.svg");
+        }
+      });
+    </script>
   </body>
 </html>

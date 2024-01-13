@@ -22,21 +22,21 @@ aside {
   justify-content: space-between;
 }
 
-nav {
+#vertical {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-nav h1 {
+#vertical h1 {
   color: #82cfc2;
   font-size: 2.1125em;
   font-weight: 600;
   margin-bottom: 1em;
 }
 
-.nav-btn {
+aside .nav-btn {
   width: 100%;
   font-size: var(--fs-20);
   font-weight: medium;
@@ -65,6 +65,35 @@ nav h1 {
   padding-left: 0.625em;
 }
 
+#horizontal {
+  display: none;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+#horizontal .navBtnGroup {
+  width: 80%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.2em;
+}
+
+#horizontal .nav-btn {
+  font-size: var(--fs-20);
+  font-weight: medium;
+  color: var(--font-clr);
+  padding: 0.3em 0.2em;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
 /*** Calendar Container styles ***/
 .calendar-section {
   width: 100%;
@@ -90,7 +119,7 @@ nav h1 {
 /*** Calendar Styling ***/
 :root {
   --fc-page-bg-color: #fff;
-  --fc-border-color: var(--main-bg);
+  --fc-border-color: var(--main-bg2);
   --fc-button-text-color: #fff;
   --fc-event-bg-color: #3788d8;
   --fc-event-border-color: #3788d8;
@@ -271,7 +300,7 @@ table,
   padding-bottom: 0.8em;
   font-weight: bold;
   font-size: 1.3em;
-  border-bottom: 1px solid var(--main-bg);
+  border-bottom: 2px solid var(--main-bg2);
 }
 
 .input-container {
@@ -321,6 +350,23 @@ select,
   display: flex;
   justify-content: space-between;
   margin-top: 2.5em;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 51px;
+  height: 51px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border-radius: 0.5em;
+  border: none;
 }
 
 input[type="submit"],
