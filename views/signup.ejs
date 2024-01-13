@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stulendar | Sign Up</title>
+    <link rel="stylesheet" href="styles/preSets.css" />
+    <link rel="stylesheet" href="styles/loginSignup.css" />
+  </head>
+  <body>
+    <h1>خوش آمدید Stulendar به</h1>
+
+    <form action="">
+      <div class="input-container">
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="*نام کاربری"
+          required
+        />
+        <p class="errorMessage"></p>
+      </div>
+      <div class="input-container">
+        <div class="passContainer">
+          <img src="Icons/hide.svg" alt="hide/show icon" id="passIcon" />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="*رمز ورود"
+            required
+          />
+        </div>
+        <p class="errorMessage"></p>
+      </div>
+      <div class="input-container">
+        <div class="passContainer">
+          <img
+            src="Icons/hide.svg"
+            alt="hide/show icon"
+            id="repeatPassIcon"
+          />
+          <input
+            type="password"
+            name="repeatPass"
+            id="repeatPass"
+            placeholder="*تکرار رمز ورود"
+            required
+          />
+        </div>
+        <p class="errorMessage"></p>
+      </div>
+      <div class="input-container">
+        <input type="email" name="email" id="email" placeholder="آدرس ایمیل" />
+      </div>
+      <input type="submit" value="ثبت نام" />
+      <div class="linkContainer">
+        <p>قبلا ثبت نام کرده اید؟</p>
+        <a href="login.html">ورود به برنامه</a>
+      </div>
+    </form>
+
+    <img
+      src="Icons/IconGroup.svg"
+      alt="background"
+      class="backgroundImg"
+      width="497vw"
+    />
+
+    <!-- Scripts -->
+    <script>
+      /*** Toggle hide/show icon in password input ***/
+      let passIcon = document.getElementById("passIcon");
+      let passInput = document.getElementById("password");
+      passIcon.addEventListener("click", () => {
+        if (passInput.type == "password") {
+          passInput.type = "text";
+          passIcon.setAttribute("src", "Icons/show.svg");
+        } else {
+          passInput.type = "password";
+          passIcon.setAttribute("src", "Icons/hide.svg");
+        }
+      });
+      let RPIcon = document.getElementById("repeatPassIcon");
+      let RPInput = document.getElementById("repeatPass");
+      RPIcon.addEventListener("click", () => {
+        if (RPInput.type == "password") {
+          RPInput.type = "text";
+          RPIcon.setAttribute("src", "Icons/show.svg");
+        } else {
+          RPInput.type = "password";
+          RPIcon.setAttribute("src", "Icons/hide.svg");
+        }
+      });
+    </script>
+  </body>
+</html>

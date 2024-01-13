@@ -1,0 +1,111 @@
+@media screen and (min-width: 1136px) {
+  .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+    font-size: var(--fs-18);
+  }
+}
+
+@media screen and (max-width: 1136px) {
+  aside {
+    display: none;
+  }
+  #horizontal {
+    display: flex;
+  }
+  .calendar-section {
+    align-self: center;
+    margin: 0;
+  }
+  #horizontal {
+    padding: 0.5em 1em 0.5em 1.5em;
+  }
+  #horizontal .nav-btn {
+    font-size: var(--fs-18);
+  }
+}
+
+@media screen and (max-width: 826px) {
+  #horizontal .nav-btn {
+    font-size: var(--fs-12);
+  }
+  .module-header {
+    font-size: var(--fs-18);
+  }
+}
+
+@media screen and (max-width: 591px) {
+  main {
+    padding: 1.5em 0.8em;
+  }
+  #horizontal {
+    padding: 0.5em 1em;
+  }
+  .nav-btn img {
+    display: none;
+  }
+  #horizontal .navBtnGroup {
+    gap: 0.5em;
+  }
+  .fc .fc-toolbar-title {
+    font-size: var(--fs-18);
+  }
+  .fc-today-button {
+    padding: 0.2em 1em !important;
+    border-radius: 1.5em !important;
+  }
+  .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+    font-size: var(--fs-18);
+  }
+  #moduleBg {
+    padding-top: 0;
+  }
+  #eventModule,
+  #classModule {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    position: fixed;
+    overflow-y: scroll;
+  }
+  .module-btn-group {
+    margin-top: 0;
+  }
+  #classForm {
+    min-height: 90vh;
+    padding: 1em 1.8em 0 1.8em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .inputGroup {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .inputGroup .input-container {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 386px) {
+  .fc .fc-toolbar-title {
+    font-size: var(--fs-12);
+  }
+  .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+    font-size: var(--fs-12);
+  }
+  #horizontal .nav-btn {
+    font-size: var(--fs-12);
+  }
+  .module-header {
+    font-size: var(--fs-12);
+  }
+  .EinfoModule {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    position: fixed;
+    overflow-y: scroll;
+  }
+  .EinfoModule .btnGroup {
+    margin-bottom: 1.5em;
+  }
+}

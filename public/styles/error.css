@@ -1,0 +1,19 @@
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1.8em;
+}
+
+img {
+  max-width: 100%;
+}
+
+p {
+  color: var(--font-clr);
+  font-size: var(--fs-20);
+  margin-top: 1.5em;
+  text-align: center;
+}
