@@ -17,6 +17,7 @@
           name="username"
           id="username"
           placeholder="*نام کاربری"
+          value="<%= inputData.username %>"
           required
         />
         <p class="errorMessage"></p>
@@ -52,7 +53,7 @@
         <p class="errorMessage"></p>
       </div>
       <div class="input-container">
-        <input type="email" name="email" id="email" placeholder="آدرس ایمیل" />
+        <input type="email" name="email" id="email" value="<%= inputData.email %>" placeholder="آدرس ایمیل" />
       </div>
       <input type="submit" value="ثبت نام" />
       <div class="linkContainer">

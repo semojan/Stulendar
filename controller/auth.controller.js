@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const sessionUtil = require("../util/session-util");
+const validation = require("../util/validations");
 const User = require("../model/user.model");
 
 router.get("/signup", function(req, res, next){
@@ -11,7 +12,6 @@ router.get("/signup", function(req, res, next){
     if (!sessionData){
         sessionData = {
             username: "",
-            password: "",
             email: ""
         }
     }
@@ -21,15 +21,59 @@ router.get("/signup", function(req, res, next){
 
 router.post("/signup", async function(req, res, next){
     const userData = req.body;
+
+    if(
+        !validation.userDetailsAreValid(
+        userData.username,
+        userData.password,
+        userData.email
+        ) || 
+        !validation.repeatPassMatch(
+            userData.password, 
+            userData.repeatPass
+        )
+    ){
+        sessionUtil.flashDataToSession(req, {
+            errorMessage: 
+                "اطلاعات نامعتبر. رمز عبور باید حداقل 5 کارکتر داشته باشد و نام کاربری و ایمیل نباید خالی باشند.",
+            username: userData.username,
+            email: userData.email
+        }, function(){
+            res.redirect("/signup");
+        });
+        return;
+    }
+
     const user = new User(
         userData.username,
         userData.password,
         userData.email
     );
 
-    await user.addUser();
+    let createdUser;
 
-    const createdUser = await user.getUser();
+    try{
+        const existsAlready = await user.getUser();
+
+        if (existsAlready){
+            sessionUtil.flashDataToSession(req, {
+                errorMessage: 
+                    "نام کاربری تکراری. اگر از قبل ثبت نام کردید وارد شوید در غیر این صورت نام کاربری دیگری انتخاب کنید.",
+                username: userData.username,
+                email: userData.email
+            }, function(){
+                res.redirect("/signup");
+            });
+            return;
+        }
+
+        await user.addUser();
+
+        createdUser = await user.getUser();
+    } catch (error){
+        next(error);
+        return;
+    }
 
     sessionUtil.createUserSession(req, createdUser, function(){
         res.redirect("/");
@@ -41,9 +85,7 @@ router.get("/login", function(req, res, next){
 
     if (!sessionData){
         sessionData = {
-            username: "",
-            password: "",
-            email: ""
+            username: ""
         }
     }
 
@@ -57,23 +99,47 @@ router.post("/login", async function(req, res, next){
         userData.password
     );
 
-    const existingUser = await user.getUser();
+    let existingUser;
+
+    try{
+        existingUser = await user.getUser();
+    } catch (error){
+        next(error);
+        return;
+    }
     
     if(!existingUser){
-        res.redirect("/login");
+        sessionUtil.flashDataToSession(req, {
+            errorMessage: 
+                "نام کاربری اشتباه است.",
+            username: userData.username
+        }, function(){
+            res.redirect("/login");
+        });
         return;
     }
 
     const correctPass = await user.comparePass(existingUser.password)
 
     if(!correctPass){
-        res.redirect("/login");
+        sessionUtil.flashDataToSession(req, {
+            errorMessage: 
+                "رمز عبور اشتباه است.",
+            username: userData.username
+        }, function(){
+            res.redirect("/login");
+        });
         return;
     }
 
     sessionUtil.createUserSession(req, existingUser, function(){
         res.redirect("/");
     });
+});
+
+router.get("/logout", function(res, req, next){
+    sessionUtil.destroyUserAuthSession(req);
+    res.redirect("/");
 });
 
 module.exports = router;
