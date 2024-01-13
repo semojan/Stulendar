@@ -3,12 +3,18 @@ const db = require("../data/mongoDB");
 const mongodb = require("mongodb")
 
 class Course{
-    constructor (userId, groupId, title, color, rrule, courseId){
+    constructor (userId, groupId, title, color, freq, interval, byweekday, dtstart, until, courseId){
         this.userId = userId;
         this.groupId = groupId;
         this.title = title;
         this.color = color;
-        this.rrule = rrule;
+        this.rrule = {
+            freq: freq,
+            interval: interval,
+            byweekday: byweekday,
+            dtstart: dtstart,
+            until: until
+        };
         this.id = courseId;
     }
 

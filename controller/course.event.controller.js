@@ -85,7 +85,11 @@ router.post("/courses", async function(req, res, next){
             courseData.groupId,
             courseData.title,
             courseData.color,
-            courseData.rrule
+            courseData.rrule.freq,
+            courseData.rrule.interval,
+            courseData.rrule.byweekday,
+            courseData.rrule.dtstart,
+            courseData.rrule.until
         );
         await course.saveCourse();
 
@@ -106,7 +110,11 @@ router.patch("/courses", async function(req, res, next){
             courseData.groupId,
             courseData.title,
             courseData.color,
-            courseData.rrule,
+            courseData.rrule.freq,
+            courseData.rrule.interval,
+            courseData.rrule.byweekday,
+            courseData.rrule.dtstart,
+            courseData.rrule.until,
             courseData.id
         );
         await course.saveCourse();
