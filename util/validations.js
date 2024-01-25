@@ -1,22 +1,21 @@
-function isEmpty ( value){
-    return !value || value.trim() === "";
+function isEmpty(value) {
+  return !value || value.trim() === "";
 }
 
-function userDetailsAreValid (username, password, email){
-    return (
-        email &&
-        email.includes("@") &&
-        password &&
-        password.trim().length >= 5 &&
-        !isEmpty(username)
-    );
+function userDetailsAreValid(username, password, email) {
+  return (
+    email.includes("@") &&
+    password &&
+    password.trim().length >= 5 &&
+    !isEmpty(username)
+  );
 }
 
-function repeatPassMatch (password, repeatPass) {
-    return password === repeatPass;
+function repeatPassMatch(password, repeatPass) {
+  return password === repeatPass;
 }
 
 module.exports = {
-    userDetailsAreValid: userDetailsAreValid,
-    repeatPassMatch: repeatPassMatch
+  userDetailsAreValid: userDetailsAreValid,
+  repeatPassMatch: repeatPassMatch,
 };

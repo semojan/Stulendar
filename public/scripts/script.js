@@ -40,7 +40,13 @@ let events = [
 
 document.addEventListener("DOMContentLoaded", initCalendar());
 
-function initCalendar() {
+async function initCalendar() {
+  //geting the data from server
+  let eventDatas = await fetchEvents();
+  let courseDatas = await fetchCourses();
+  console.log(eventDatas);
+  let allDatas = { ...eventDatas, ...courseDatas };
+
   //getting ratio of container for fitting calendar
   let container = document.getElementById("calendarSection");
   let containerWidth = container.offsetWidth;
@@ -69,6 +75,7 @@ function initCalendar() {
       infoBoxClone.querySelector(".eventDateTime").innerHTML = changeDateLocale(
         info.event.start
       );
+      console.log(info.event);
       let moduleBg = document.getElementById("moduleBg");
 
       moduleBg.appendChild(infoBoxClone);
@@ -82,7 +89,7 @@ function initCalendar() {
       editBtn.addEventListener("click", async () => {
         removeInfoModule();
 
-        if (info.event.groupId === "") {
+        if (info.event.groupId === "null") {
           updateEventForm(info.event);
         } else {
           let clickedEvent = Object.values(events).filter(
@@ -95,11 +102,13 @@ function initCalendar() {
         }
       });
     },
-
-    events: events,
   });
 
   calendar.setOption("aspectRatio", ratio + 0.05);
+  Object.values(allDatas).forEach((data) => {
+    delete Object.assign(data, { id: data._id })["_id"];
+    addEvent(data);
+  });
   calendar.render();
 }
 
@@ -127,7 +136,7 @@ eventForm.addEventListener("submit", (e) => {
   eventSubmit(eventForm);
 });
 
-function eventSubmit(form) {
+async function eventSubmit(form) {
   let event = Object.fromEntries(new FormData(form));
   let dateArray = event.start.split("/");
   let date = jalaali.toGregorian(
@@ -142,13 +151,36 @@ function eventSubmit(form) {
     )}` +
     "T" +
     event.eventTime;
-  closeModule();
-  addEvent({
-    id: calendar.getEvents().length,
+
+  let newEvent = {
     title: event.title,
     start: date,
     color: event.eventColor,
-  });
+  };
+
+  try {
+    const response = await fetch("/events", {
+      method: "POST",
+      body: JSON.stringify(newEvent),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      fetch("/events")
+        .then((rest) => rest.json())
+        .then((data) => {
+          console.log(data);
+          let popedID = data.pop()._id;
+          newEvent = { ...newEvent, id: popedID };
+        });
+    }
+  } catch (error) {
+    alert("error in event submit");
+  }
+
+  addEvent(newEvent);
+  closeModule();
   form.reset();
 }
 
@@ -279,24 +311,36 @@ function deleteEvent(id) {
   document.getElementById("moduleBg").classList.add("display-none");
 }
 
-function updateEventForm({ id, title, start, backgroundColor, description }) {
+function updateEventForm({
+  id,
+  title,
+  start,
+  backgroundColor,
+  extendedProps: { description },
+}) {
   // display event form box
   document.getElementById("moduleBg").classList.remove("display-none");
   document.getElementById("eventModule").classList.remove("display-none");
 
   // fetch data into form
-  let time = start.toLocaleTimeString().slice(0, 7);
+  let time = start.toLocaleTimeString(undefined, {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+
   let dateArray = start.toLocaleDateString("fa-IR").split("/");
   document.querySelector("#eventModule h1").innerHTML = "تغییر رویداد";
   document.querySelector("#eventForm #eventTitle").value = title;
   document.querySelector("#eventForm #eventDate").value = `${
     dateArray[0]
   }/${dateArray[1].padStart(2, "۰")}/${dateArray[2].padStart(2, "۰")}`;
-  document.querySelector("#eventForm #eventTime").value = `0${time}`;
+  document.querySelector("#eventForm #eventTime").value = `${time}`;
 
   document.querySelector("#eventForm #eventColor").value = backgroundColor;
 
-  if (description !== undefined)
+  if (description !== null)
     document.querySelector("#eventForm #eventDescription").value = description;
 
   document.querySelector('#eventForm input[type="submit"]').value =
@@ -373,4 +417,27 @@ function AddUpdatedEvent() {
     });
     removeInputGroup();
   });
+}
+
+// fetch("/courses")
+//   .then((rest) => rest.json())
+//   .then((data) => {
+//     console.log(data);
+//   });
+
+/*** Fetching all events and courses functions ***/
+async function fetchEvents() {
+  return fetch("/events")
+    .then((rest) => rest.json())
+    .then((data) => {
+      return data;
+    });
+}
+
+async function fetchCourses() {
+  return fetch("/courses")
+    .then((rest) => rest.json())
+    .then((data) => {
+      return data;
+    });
 }
