@@ -44,7 +44,6 @@ async function initCalendar() {
   //geting the data from server
   let eventDatas = await fetchEvents();
   let courseDatas = await fetchCourses();
-  console.log(eventDatas);
   let allDatas = { ...eventDatas, ...courseDatas };
 
   //getting ratio of container for fitting calendar
@@ -75,7 +74,7 @@ async function initCalendar() {
       infoBoxClone.querySelector(".eventDateTime").innerHTML = changeDateLocale(
         info.event.start
       );
-      console.log(info.event);
+
       let moduleBg = document.getElementById("moduleBg");
 
       moduleBg.appendChild(infoBoxClone);
@@ -89,14 +88,18 @@ async function initCalendar() {
       editBtn.addEventListener("click", async () => {
         removeInfoModule();
 
-        if (info.event.groupId === "null") {
+        if (info.event.groupId === "null" || info.event.groupId === "") {
           updateEventForm(info.event);
         } else {
-          let clickedEvent = Object.values(events).filter(
+          let courseData = await fetchCourses();
+          let clickedEvent = Object.values(courseData).filter(
+            (course) => `${course.groupId}` === info.event.groupId
+          );
+          let eventData = await fetchEvents();
+          let exEvent = Object.values(eventData).filter(
             (event) => `${event.groupId}` === info.event.groupId
           );
-          let exEvent = clickedEvent.pop();
-          Promise.resolve(updateClassForm(clickedEvent, exEvent)).then(() =>
+          Promise.resolve(updateClassForm(clickedEvent, exEvent[0])).then(() =>
             AddUpdatedEvent()
           );
         }
@@ -129,6 +132,28 @@ function changeDateLocale(date) {
 
 //1.971995
 
+/*** convert persian digits into english ***/
+String.prototype.toEnglishDigits = function () {
+  var num_dic = {
+    "۰": "0",
+    "۱": "1",
+    "۲": "2",
+    "۳": "3",
+    "۴": "4",
+    "۵": "5",
+    "۶": "6",
+    "۷": "7",
+    "۸": "8",
+    "۹": "9",
+  };
+
+  return parseInt(
+    this.replace(/[۰-۹]/g, function (w) {
+      return num_dic[w];
+    })
+  );
+};
+
 /*** take form data and convert to object ***/
 const eventForm = document.getElementById("eventForm");
 eventForm.addEventListener("submit", (e) => {
@@ -140,9 +165,9 @@ async function eventSubmit(form) {
   let event = Object.fromEntries(new FormData(form));
   let dateArray = event.start.split("/");
   let date = jalaali.toGregorian(
-    parseInt(dateArray[0]),
-    parseInt(dateArray[1]),
-    parseInt(dateArray[2])
+    parseInt(dateArray[0].toEnglishDigits()),
+    parseInt(dateArray[1].toEnglishDigits()),
+    parseInt(dateArray[2].toEnglishDigits())
   );
   date =
     `${date.gy}-${String(date.gm).padStart(2, "0")}-${String(date.gd).padStart(
@@ -156,29 +181,10 @@ async function eventSubmit(form) {
     title: event.title,
     start: date,
     color: event.eventColor,
+    description: event.eventDescription,
   };
 
-  try {
-    const response = await fetch("/events", {
-      method: "POST",
-      body: JSON.stringify(newEvent),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (response.ok) {
-      fetch("/events")
-        .then((rest) => rest.json())
-        .then((data) => {
-          console.log(data);
-          let popedID = data.pop()._id;
-          newEvent = { ...newEvent, id: popedID };
-        });
-    }
-  } catch (error) {
-    alert("error in event submit");
-  }
-
+  newEvent = await POSTData(newEvent, "events");
   addEvent(newEvent);
   closeModule();
   form.reset();
@@ -190,13 +196,13 @@ classForm.addEventListener("submit", (e) => {
   classFormSubmit(classForm);
 });
 
-function classFormSubmit(form) {
+async function classFormSubmit(form) {
   let classEvent = Object.fromEntries(new FormData(form));
   let dateArray = classEvent.exDate.split("/");
   let exDate = jalaali.toGregorian(
-    parseInt(dateArray[0]),
-    parseInt(dateArray[1]),
-    parseInt(dateArray[2])
+    parseInt(dateArray[0].toEnglishDigits()),
+    parseInt(dateArray[1].toEnglishDigits()),
+    parseInt(dateArray[2].toEnglishDigits())
   );
   exDate =
     `${exDate.gy}-${String(exDate.gm).padStart(2, "0")}-${String(
@@ -207,57 +213,58 @@ function classFormSubmit(form) {
 
   let scheduleForm = document.querySelectorAll("#timeScheduleBox #IG");
   let groupId = calendar.getEvents().length;
-  let id = groupId;
-  Object.values(scheduleForm).forEach((Sform) => {
+  Object.values(scheduleForm).forEach(async (Sform) => {
     let inputGroup = Object.fromEntries(new FormData(Sform));
-    let weekday = new Date(inputGroup.classSDate);
     dateArray = inputGroup.classSDate.split("/");
     let startDate = jalaali.toGregorian(
-      parseInt(dateArray[0]),
-      parseInt(dateArray[1]),
-      parseInt(dateArray[2])
+      parseInt(dateArray[0].toEnglishDigits()),
+      parseInt(dateArray[1].toEnglishDigits()),
+      parseInt(dateArray[2].toEnglishDigits())
     );
-    startDate =
-      `${startDate.gy}-${String(startDate.gm).padStart(2, "0")}-${String(
-        startDate.gd
-      ).padStart(2, "0")}` +
-      "T" +
-      inputGroup.classTime;
-
-    let dateArray2 = classEvent.classEndDate.split("/");
-    let endDate = jalaali.toGregorian(
-      parseInt(dateArray2[0]),
-      parseInt(dateArray2[1]),
-      parseInt(dateArray2[2])
-    );
-
-    endDate = `${startDate.gy}-${String(startDate.gm).padStart(
+    startDate = `${startDate.gy}-${String(startDate.gm).padStart(
       2,
       "0"
     )}-${String(startDate.gd).padStart(2, "0")}`;
 
-    addEvent({
+    let weekday = new Date(startDate);
+
+    let dateArray2 = classEvent.classEndDate.split("/");
+    let endDate = jalaali.toGregorian(
+      parseInt(dateArray2[0].toEnglishDigits()),
+      parseInt(dateArray2[1].toEnglishDigits()),
+      parseInt(dateArray2[2].toEnglishDigits())
+    );
+
+    endDate = `${endDate.gy}-${String(endDate.gm).padStart(2, "0")}-${String(
+      endDate.gd
+    ).padStart(2, "0")}`;
+
+    let course = {
       groupId: groupId,
-      id: id++,
       color: classEvent.eventColor,
       title: classEvent.classTitle,
       rrule: {
         freq: "weekly",
         interval: inputGroup.repeatInput == "everyWeek" ? 1 : 2,
         byweekday: [weekday.toString().slice(0, 2)],
-        dtstart: startDate,
+        dtstart: startDate + "T" + inputGroup.classTime,
         until: endDate,
       },
-    });
+    };
+
+    course = await POSTData(course, "courses");
+    addEvent(course);
   });
 
-  addEvent({
+  let exam = {
     groupId: groupId,
-    id: id++,
     color: classEvent.eventColor,
     title: `امتحان ${classEvent.classTitle}`,
     start: exDate,
-  });
+  };
+
+  exam = await POSTData(exam, "events");
+  addEvent(exam);
   closeModule();
   removeInputGroup();
   form.reset();
@@ -292,22 +299,31 @@ function removeInfoModule() {
 
 function deleteEventBtn(event) {
   let deleteBtn = document.getElementById("deleteEvent");
-  deleteBtn.addEventListener("click", () => {
-    if (event.groupId === "") deleteEvent(event.id);
-    else {
-      let clickedEvent = Object.values(events).filter(
+  deleteBtn.addEventListener("click", async () => {
+    if (event.groupId === "null" || event.groupId === "") {
+      deleteEvent(event.id, "events");
+    } else {
+      let courseData = await fetchCourses();
+      let clickedEvent = Object.values(courseData).filter(
         (cEvent) => `${cEvent.groupId}` === event.groupId
       );
       clickedEvent.forEach((e) => {
-        deleteEvent(e.id);
+        deleteEvent(e._id, "courses");
       });
+
+      let eventData = await fetchEvents();
+      let exEvent = Object.values(eventData).filter(
+        (e) => `${e.groupId}` === event.groupId
+      );
+      if (exEvent !== undefined) deleteEvent(exEvent[0]._id, "events");
     }
     removeInfoModule();
   });
 }
 
-function deleteEvent(id) {
+async function deleteEvent(id, type) {
   calendar.getEventById(id).remove();
+  await DELETEData(id, type);
   document.getElementById("moduleBg").classList.add("display-none");
 }
 
@@ -356,15 +372,14 @@ function updateEventForm({
 let eventIds;
 function updateClassForm(events, exam) {
   eventIds = [];
-  eventIds.push(exam.id);
   // display event form box
   document.getElementById("moduleBg").classList.remove("display-none");
   document.getElementById("classModule").classList.remove("display-none");
 
-  document.querySelector("#classModule h1").innerHTML = "تغییر کلاس درس";
+  document.querySelector("#classModule h1").innerHTML = "تغییر برنامه درسی";
   // fetch data into form
   events.forEach((event) => {
-    eventIds.push(event.id);
+    eventIds.push(event._id);
     let IGclone = addScheduleBox();
     let classTime = event.rrule.dtstart.split("T")[1];
     let classDate = event.rrule.dtstart.split("T")[0].split("-");
@@ -393,17 +408,20 @@ function updateClassForm(events, exam) {
     ).padStart(2, "۰")}/${String(endDate.jd).padStart(2, "۰")}`;
   });
 
-  let exTime = exam.start.split("T")[1];
-  let exDate = exam.start.split("T")[0].split("-");
-  exDate = jalaali.toJalaali(
-    parseInt(exDate[0]),
-    parseInt(exDate[1]),
-    parseInt(exDate[2])
-  );
-  document.querySelector("#exDate").value = `${exDate.jy}/${String(
-    exDate.jm
-  ).padStart(2, "۰")}/${String(exDate.jd).padStart(2, "۰")}`;
-  document.querySelector("#exTime").value = exTime;
+  if (exam !== undefined) {
+    eventIds.push(exam._id);
+    let exTime = exam.start.split("T")[1];
+    let exDate = exam.start.split("T")[0].split("-");
+    exDate = jalaali.toJalaali(
+      parseInt(exDate[0]),
+      parseInt(exDate[1]),
+      parseInt(exDate[2])
+    );
+    document.querySelector("#exDate").value = `${exDate.jy}/${String(
+      exDate.jm
+    ).padStart(2, "۰")}/${String(exDate.jd).padStart(2, "۰")}`;
+    document.querySelector("#exTime").value = exTime;
+  }
   document.querySelector("#classForm #eventColor").value = exam.color;
   document.querySelector('#classForm input[type="submit"]').value =
     "ثبت تغییرات";
@@ -412,18 +430,14 @@ function updateClassForm(events, exam) {
 function AddUpdatedEvent() {
   classForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    eventIds.forEach((id) => {
-      deleteEvent(id);
+
+    eventIds.forEach((id, index) => {
+      deleteEvent(id, "courses");
+      if (index == eventIds.length - 1) deleteEvent(id, "events");
     });
     removeInputGroup();
   });
 }
-
-// fetch("/courses")
-//   .then((rest) => rest.json())
-//   .then((data) => {
-//     console.log(data);
-//   });
 
 /*** Fetching all events and courses functions ***/
 async function fetchEvents() {
@@ -441,3 +455,57 @@ async function fetchCourses() {
       return data;
     });
 }
+
+async function POSTData(event, type) {
+  try {
+    const response = await fetch(`/${type}`, {
+      method: "POST",
+      body: JSON.stringify(event),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      return fetch("/events")
+        .then((rest) => rest.json())
+        .then((data) => {
+          let popedID = data.pop()._id;
+          return { ...event, id: popedID };
+        });
+    }
+  } catch (error) {
+    alert("error in event submit");
+  }
+}
+
+async function DELETEData(id, type) {
+  try {
+    const response = await fetch(`/${type}`, {
+      method: "DELETE",
+      body: JSON.stringify({ id: id }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    alert("error in event submit");
+  }
+}
+
+// async function dldatabase() {
+//   try {
+//     const response = await fetch("/courses", {
+//       method: "DELETE",
+//       body: JSON.stringify({
+//         id: "65b2e8b672ec17b68d47a7d4",
+//       }),
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
+//   } catch (error) {
+//     alert("error in event delete");
+//   }
+// }
+
+// dldatabase();

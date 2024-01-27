@@ -34,29 +34,17 @@
   <body>
     <!-- horizontal Navbar -->
     <nav id="horizontal">
-      <div class="navBtnGroup">
-        <button class="nav-btn" id="dailyBtn">
-          برنامه روزانه
-          <img src="Icons/daily-btn.svg" alt="daily-icon" width="40px" />
-        </button>
-        <button class="nav-btn" id="weeklyBtn">
-          برنامه هفتگی
-          <img src="Icons/weekly-btn.svg" alt="daily-icon" width="40px" />
-        </button>
-        <button class="nav-btn" id="monthlyBtn">
-          برنامه ماهانه
-          <img src="Icons/monthly-btn.svg" alt="daily-icon" width="40px" />
-        </button>
-      </div>
-      <button class="nav-btn" id="userAccountBtn">
-        حساب کاربری
-        <img src="Icons/profile.svg" alt="daily-icon" width="40px" />
+      <button class="hamburgerBtn" id="menu">
+        <img src="Icons/menu.svg" alt="menu" />
       </button>
     </nav>
     <main>
       <!-- vertical Navbar section -->
       <aside>
         <nav id="vertical">
+          <button class="closeMenu" id="closeMenu">
+            <img src="Icons/close.svg" alt="close menu" />
+          </button>
           <h1>Stulendar</h1>
           <button class="nav-btn" id="dailyBtn">
             برنامه روزانه
@@ -71,10 +59,6 @@
             <img src="Icons/monthly-btn.svg" alt="daily-icon" width="40px" />
           </button>
         </nav>
-        <button class="nav-btn">
-          حساب کاربری
-          <img src="Icons/profile.svg" alt="daily-icon" width="40px" />
-        </button>
       </aside>
 
       <!-- Calendar section -->
@@ -189,7 +173,7 @@
               <div id="timeScheduleBox">
                 <div class="timeScheduleBox">
                   <p>برنامه زمانی</p>
-                  <button class="addScheduleBTN" id="addSchedule">
+                  <button class="addScheduleBTN" id="addSchedule" type="button">
                     افزودن
                     <img
                       src="Icons/circularAdd.svg"
@@ -264,7 +248,9 @@
             </div>
             <div class="module-btn-group">
               <input type="submit" value="ثبت کلاس" id="" />
-              <button class="cancel-btn" id="cancelBtn">انصراف</button>
+              <button class="cancel-btn" id="cancelBtn" type="button">
+                انصراف
+              </button>
             </div>
           </form>
         </div>
