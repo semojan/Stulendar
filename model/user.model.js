@@ -25,16 +25,6 @@ class User{
     async comparePass(hashedPass){
         return await bcrypt.compare(this.password, hashedPass);
     }
-
-    async existsAlready(){
-        const existingUser = await this.getUser();
-
-        if(existingUser){
-            return true;
-        }
-
-        return false;
-    }
 }
 
 module.exports = User;
