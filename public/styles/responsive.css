@@ -6,26 +6,60 @@
 
 @media screen and (max-width: 1136px) {
   aside {
+    position: fixed;
+    right: 0;
+    top: 0;
     display: none;
+    width: 100%;
+    z-index: 12;
+    border-radius: 0;
+    height: 100vh;
+    background-color: rgba(8, 12, 21, 0.697);
+  }
+  aside #vertical {
+    position: absolute;
+    height: 100vh;
+    padding: 3em 1em;
+    right: 0;
+    top: 0;
+    width: 30%;
+    background-color: var(--main-bg1);
+  }
+  #vertical .closeMenu {
+    display: inline-block;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+  }
+  #horizontal button {
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    padding: 0.54em;
+  }
+  .showAside {
+    display: flex;
   }
   #horizontal {
     display: flex;
+    padding: 0.5em 1em 0.5em 1.5em;
+    align-items: center;
   }
-  .calendar-section {
+  #horizontal .calendar-section {
     align-self: center;
     margin: 0;
   }
-  #horizontal {
-    padding: 0.5em 1em 0.5em 1.5em;
-  }
-  #horizontal .nav-btn {
-    font-size: var(--fs-18);
+  aside .nav-btn {
+    border-bottom: 1px solid rgb(var(--input-clr));
+    border-radius: 0;
   }
 }
 
 @media screen and (max-width: 826px) {
-  #horizontal .nav-btn {
-    font-size: var(--fs-12);
+  aside #vertical {
+    width: 50%;
   }
   .module-header {
     font-size: var(--fs-18);
@@ -33,14 +67,14 @@
 }
 
 @media screen and (max-width: 591px) {
+  aside #vertical {
+    width: 70%;
+  }
   main {
     padding: 1.5em 0.8em;
   }
   #horizontal {
     padding: 0.5em 1em;
-  }
-  .nav-btn img {
-    display: none;
   }
   #horizontal .navBtnGroup {
     gap: 0.5em;
@@ -86,6 +120,9 @@
 }
 
 @media screen and (max-width: 386px) {
+  aside #vertical {
+    width: 100%;
+  }
   .fc .fc-toolbar-title {
     font-size: var(--fs-12);
   }

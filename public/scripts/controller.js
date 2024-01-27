@@ -23,6 +23,18 @@ monthlyBtn.addEventListener("click", () => {
   weeklyBtn.classList.remove("nav-btn-clicked");
 });
 
+/*** hamburger menu ***/
+const menuBtn = document.getElementById("menu");
+const sideNavbar = document.querySelector("aside");
+menuBtn.addEventListener("click", () => {
+  sideNavbar.classList.toggle("showAside");
+});
+
+const closeMenu = document.getElementById("closeMenu");
+closeMenu.addEventListener("click", () => {
+  sideNavbar.classList.toggle("showAside");
+});
+
 /*** add event/class buttons functions ***/
 const wrapper = document.querySelector(".wrapper");
 wrapper.addEventListener("click", wrapperToggle);
