@@ -7,6 +7,7 @@ const db = require("./data/mongoDB");
 const authController = require("./controller/auth.controller");
 const appController = require("./controller/app.controller");
 const eventController = require("./controller/course.event.controller");
+const captchaController = require("./controller/captcha.controller");
 const sessionConfig = require("./config/session");
 
 const app = express();
@@ -39,6 +40,7 @@ app.use(function(req, res, next){
 app.use(authController);
 app.use(appController);
 app.use(eventController);
+app.use('/captcha', captchaController);
 
 
 // error handlers

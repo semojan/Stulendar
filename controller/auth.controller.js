@@ -142,7 +142,9 @@ router.post("/login", async function (req, res, next) {
 });
 
 router.get("/logout", function (res, req, next) {
+  console.log(req.session.uid)
   sessionUtil.destroyUserAuthSession(req);
+  console.log(req.session.uid)
   res.redirect("/");
 });
 

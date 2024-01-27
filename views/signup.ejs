@@ -20,7 +20,6 @@
           value="<%= inputData.username %>"
           required
         />
-        <p class="errorMessage"></p>
       </div>
       <div class="input-container">
         <div class="passContainer">
@@ -33,7 +32,6 @@
             required
           />
         </div>
-        <p class="errorMessage"></p>
       </div>
       <div class="input-container">
         <div class="passContainer">
@@ -46,7 +44,6 @@
             required
           />
         </div>
-        <p class="errorMessage"></p>
       </div>
       <div class="input-container">
         <input
@@ -62,6 +59,7 @@
         <p>قبلا ثبت نام کرده اید؟</p>
         <a href="/login">ورود به برنامه</a>
       </div>
+      <p class="errorMessage"><%= inputData.errorMessage %></p>
     </form>
 
     <img

@@ -5,7 +5,7 @@ const Course = require("../model/course.model");
 const router = express.Router();
 
 router.get("/events", async function (req , res){
-    const events = await Event.getEvents("1");
+    const events = await Event.getEvents(req.session.uid);
 
     res.json(events);
 });
@@ -15,7 +15,7 @@ router.post("/events", async function(req, res, next){
     const eventData = req.body;
     try {
         const event = new Event(
-            "1",
+            req.session.uid,
             eventData.groupId,
             eventData.color,
             eventData.title,
@@ -37,7 +37,7 @@ router.patch("/events", async function(req, res, next){
     const eventData = req.body;
     try {
         const event = new Event(
-            "1",
+            req.session.uid,
             eventData.groupId,
             eventData.color,
             eventData.title,
@@ -71,7 +71,7 @@ router.delete("/events", async function(req, res, next){
 });
 
 router.get("/courses", async function (req , res){
-    const courses = await Course.getCourses("1");
+    const courses = await Course.getCourses(req.session.uid);
 
     res.json(courses);
 });
@@ -81,7 +81,7 @@ router.post("/courses", async function(req, res, next){
     const courseData = req.body;
     try { 
         const course = new Course(
-            "1",
+            req.session.uid,
             courseData.groupId,
             courseData.title,
             courseData.color,
@@ -106,7 +106,7 @@ router.patch("/courses", async function(req, res, next){
     const courseData = req.body;
     try {
         const course = new Course(
-            "1",
+            req.session.uid,
             courseData.groupId,
             courseData.title,
             courseData.color,

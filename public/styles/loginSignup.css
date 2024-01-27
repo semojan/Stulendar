@@ -106,4 +106,5 @@ input[type="submit"] {
 .errorMessage {
   color: rgb(var(--danger-clr));
   font-size: 0.8em;
+  width: 100%;
 }

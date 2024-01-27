@@ -20,7 +20,6 @@
           placeholder="*نام کاربری"
           required
         />
-        <p class="errorMessage"></p>
       </div>
       <div class="input-container">
         <div class="passContainer">
@@ -33,13 +32,13 @@
             required
           />
         </div>
-        <p class="errorMessage"></p>
       </div>
       <input type="submit" value="ورود به برنامه" />
       <div class="linkContainer">
         <p>حساب کاربری ندارید؟</p>
         <a href="/signup">ثبت نام</a>
       </div>
+      <p class="errorMessage"><%= inputData.errorMessage %></p>
     </form>
 
     <img
